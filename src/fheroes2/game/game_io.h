@@ -44,10 +44,13 @@ namespace Game
 
     std::string GetSaveDir();
     std::string GetSaveFileBaseName();
+    std::string GetAutoSaveFileName(AutoSaveType type);
     std::string GetSaveFileExtension();
     std::string GetSaveFileExtension( const int gameType );
 
-    bool AutoSave();
+    bool AutoSave(AutoSaveType type);
+
+    
     bool Save( const std::string & filePath, const bool autoSave = false );
 
     // Returns GameMode::CANCEL in case of failure.

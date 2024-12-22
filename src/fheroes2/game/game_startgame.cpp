@@ -974,9 +974,11 @@ fheroes2::GameMode Interface::AdventureMap::HumanTurn( const bool isLoadedFromSa
         redraw( REDRAW_STATUS );
         fheroes2::Display::instance().render();
 
-        if ( conf.isAutoSaveAtBeginningOfTurnEnabled() ) {
-            Game::AutoSave();
-        }
+        //if ( conf.isAutoSaveAtBeginningOfTurnEnabled() ) {
+        //    Game::AutoSave();
+        //}
+
+        Game::AutoSave(AutoSaveType::BeginningTurn);
     }
 
     GameOver::Result & gameResult = GameOver::Result::Get();
@@ -1510,9 +1512,10 @@ fheroes2::GameMode Interface::AdventureMap::HumanTurn( const bool isLoadedFromSa
                 }
             }
 
-            if ( !conf.isAutoSaveAtBeginningOfTurnEnabled() ) {
-                Game::AutoSave();
-            }
+            //if ( conf.isAutoSaveAtEndingOfTurnEnabled() ) {
+            //    Game::AutoSave();
+            //}
+            Game::AutoSave(AutoSaveType::EndedTurn);
         }
     }
 

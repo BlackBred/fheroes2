@@ -50,6 +50,8 @@
 namespace
 {
     const std::string autoSaveName{ "AUTOSAVE" };
+    const std::string autoSaveBeginningName{ "AUTOSAVE_BEGINNING" };
+    const std::string autoSaveEndedeName{ "AUTOSAVE_ENDED" };
 
     const uint16_t SAV2ID3 = 0xFF03;
 
@@ -102,10 +104,25 @@ namespace
         return stream >> hdr.status >> hdr.info >> hdr.gameType;
     }
 }
-
-bool Game::AutoSave()
+enum AutoSaveType
 {
-    return Game::Save( System::concatPath( GetSaveDir(), autoSaveName + GetSaveFileExtension() ), true );
+    BeginningTurn,
+    EndedTurn,
+    //BeginningBattle,
+    //EndedBattle
+};
+bool Game::AutoSave(AutoSaveType type)
+{
+    switch (type) {
+        case AutoSaveType::BeginningTurn:
+            if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
+                return false;
+        case AutoSaveType::EndingTurn:
+            if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
+                return false;
+    }
+    
+    return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
 }
 
 bool Game::Save( const std::string & filePath, const bool autoSave /* = false */ )
@@ -378,6 +395,24 @@ std::string Game::GetSaveFileBaseName()
     }
 
     return baseName;
+}
+
+std::string Game::GetAutoSaveFileName(AutoSaveType type)
+{
+    std::string fileName;
+    
+    switch (type) {
+    case BeginningTurn:
+        fileName = autoSaveBeginningName;
+    case EndedTurn:
+        fileName = autoSaveEndedeName;
+    default:
+        fileName = autoSaveName;
+    }
+
+    // todo if включено сохранение всех дней 
+    //fileName += "_" + std::to_string( world.GetDay() ) + "_" + std::to_string( world.GetWeek() ) + "_" + std::to_string( world.GetMonth() );
+    return fileName + GetSaveFileExtension();
 }
 
 std::string Game::GetSaveFileExtension()
