@@ -892,7 +892,7 @@ bool Settings::isAutoSaveAtBeginningOfTurnEnabled() const
     return _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN );
 }
 
-bool Settings::isAutoSaveAtEndOfTurnEnabled() const
+bool Settings::isAutoSaveAtEndOfTurnEnabled() const  
 {
     return _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN );
 }
