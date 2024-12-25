@@ -117,7 +117,7 @@ bool Game::AutoSave(AutoSaveType type)
         case AutoSaveType::BeginningTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
                 return false;
-        case AutoSaveType::EndingTurn:
+        case AutoSaveType::EndedTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
                 return false;
     }
@@ -410,8 +410,10 @@ std::string Game::GetAutoSaveFileName(AutoSaveType type)
         fileName = autoSaveName;
     }
 
-    // todo if включено сохранение всех дней 
-    //fileName += "_" + std::to_string( world.GetDay() ) + "_" + std::to_string( world.GetWeek() ) + "_" + std::to_string( world.GetMonth() );
+    if (Settings::Get().isAutoSaveOnAllTurnsEnabled()) {
+        fileName += "_" + std::to_string( world.GetMonth() ) + ":" + std::to_string( world.GetWeek() ) + ":"+ std::to_string( world.GetDay() );
+    }
+    
     return fileName + GetSaveFileExtension();
 }
 

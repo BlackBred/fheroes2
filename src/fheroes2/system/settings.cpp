@@ -81,7 +81,7 @@ namespace
         GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN = 0x10000000,
         GAME_SCREEN_SCALING_TYPE_NEAREST = 0x20000000,
         GAME_AUTO_SAVE_AT_END_OF_TURN = 0x40000000,
-        GAME_AUTO_SAVE_AT_ALL_TURNS = 0x80000000
+        GAME_AUTO_SAVE_ON_ALL_TURNS = 0x80000000
     };
 
     enum EditorOptions : uint32_t
@@ -318,8 +318,12 @@ bool Settings::Read( const std::string & filePath )
         setAutoSaveAtBeginningOfTurn( config.StrParams( "auto save at the beginning of the turn" ) == "on" );
     }
     
-    if ( config.Exists( "auto save at the ending of the turn" ) ) {
-        setAutoSaveAtEndOfTurn( config.StrParams( "auto save at the ending of the turn" ) == "on" );
+    if ( config.Exists( "auto save at the end of the turn" ) ) {
+        setAutoSaveAtEndOfTurn( config.StrParams( "auto save at the end of the turn" ) == "on" );
+    }
+
+    if ( config.Exists( "store auto save on every turn" ) ) {
+        setAutoSaveAtEndOfTurn( config.StrParams( "store auto save on every turn" ) == "on" );
     }
 
     if ( config.Exists( "cursor soft rendering" ) ) {
@@ -488,6 +492,9 @@ std::string Settings::String() const
 
     os << std::endl << "# should auto save be performed at the end of the turn: on/off" << std::endl;
     os << "auto save at the end of the turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" ) << std::endl;
+
+    os << std::endl << "# should auto save be stored on every turn: on/off" << std::endl;
+    os << "store auto save on every turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS ) ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# enable cursor software rendering" << std::endl;
     os << "cursor soft rendering = " << ( _gameOptions.Modes( GAME_CURSOR_SOFT_EMULATION ) ? "on" : "off" ) << std::endl;
@@ -815,6 +822,16 @@ void Settings::setAutoSaveAtEndOfTurn( const bool enable )
     }
 }
 
+void Settings::setAutoSaveOnAllTurns( const bool enable )
+{
+    if ( enable ) {
+        _gameOptions.SetModes( GAME_AUTO_SAVE_ON_ALL_TURNS );
+    }
+    else {
+        _gameOptions.ResetModes( GAME_AUTO_SAVE_ON_ALL_TURNS );
+    }
+}
+
 void Settings::setBattleDamageInfo( const bool enable )
 {
     if ( enable ) {
@@ -895,6 +912,10 @@ bool Settings::isAutoSaveAtBeginningOfTurnEnabled() const
 bool Settings::isAutoSaveAtEndOfTurnEnabled() const  
 {
     return _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN );
+}
+bool Settings::isAutoSaveOnAllTurnsEnabled() const  
+{
+    return _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS );
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const
