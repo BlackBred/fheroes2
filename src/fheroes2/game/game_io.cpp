@@ -110,11 +110,11 @@ bool Game::AutoSave(AutoSaveType type)
     switch (type) {
         case AutoSaveType::BeginningTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
-                return false;
+               return false;
         case AutoSaveType::EndedTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
                 return false;
-    }
+        }
     
     return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
 }
@@ -396,9 +396,9 @@ std::string Game::GetAutoSaveFileName(AutoSaveType type)
     std::string fileName;
     
     switch (type) {
-    case BeginningTurn:
+    case AutoSaveType::BeginningTurn:
         fileName = autoSaveBeginningName;
-    case EndedTurn:
+    case AutoSaveType::EndedTurn:
         fileName = autoSaveEndedeName;
     default:
         fileName = autoSaveName;
