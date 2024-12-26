@@ -398,9 +398,12 @@ std::string Game::GetAutoSaveFileName(AutoSaveType type)
     switch (type) {
     case AutoSaveType::BeginningTurn:
         fileName = autoSaveBeginningName;
+        break;
     case AutoSaveType::EndedTurn:
         fileName = autoSaveEndedeName;
+        break;
     default:
+        //todo add flag for using single general name
         fileName = autoSaveName;
     }
 
