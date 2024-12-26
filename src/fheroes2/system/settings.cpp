@@ -197,7 +197,7 @@ bool Settings::Read( const std::string & filePath )
     if ( config.Exists( "ai speed" ) ) {
         SetAIMoveSpeed( config.IntParams( "ai speed" ) );
     }
-
+    
     if ( config.Exists( "heroes speed" ) ) {
         SetHeroesMoveSpeed( config.IntParams( "heroes speed" ) );
     }
@@ -314,16 +314,19 @@ bool Settings::Read( const std::string & filePath )
         setSystemInfo( config.StrParams( "system info" ) == "on" );
     }
 
-    if ( config.Exists( "auto save at the beginning of the turn" ) ) {
-        setAutoSaveAtBeginningOfTurn( config.StrParams( "auto save at the beginning of the turn" ) == "on" );
-    }
-    
-    if ( config.Exists( "auto save at the end of the turn" ) ) {
-        setAutoSaveAtEndOfTurn( config.StrParams( "auto save at the end of the turn" ) == "on" );
+    constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
+    if ( config.Exists( AUTO_SAVE_BEGINNING ) ) {
+        setAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ) == "on" );
     }
 
-    if ( config.Exists( "store auto save on every turn" ) ) {
-        setAutoSaveOnAllTurns( config.StrParams( "store auto save on every turn" ) == "on" );
+    constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
+    if ( config.Exists( AUTO_SAVE_END ) ) {
+        setAutoSaveAtEndOfTurn( config.StrParams( AUTO_SAVE_END ) == "on" );
+    }
+
+    constexpr const char* AUTO_SAVE_EVERY_TURNS = "store auto save on every turn";
+    if ( config.Exists( AUTO_SAVE_EVERY_TURNS ) ) {
+        setAutoSaveOnAllTurns( config.StrParams( AUTO_SAVE_EVERY_TURNS ) == "on" );
     }
 
     if ( config.Exists( "cursor soft rendering" ) ) {
