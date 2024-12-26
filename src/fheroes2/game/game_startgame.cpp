@@ -856,7 +856,7 @@ fheroes2::GameMode Interface::AdventureMap::StartGame()
                     kingdom.ActionBeforeTurn();
 
 #if defined( WITH_DEBUG )
-                    if ( !isLoadedFromSave && player->isAIAutoControlMode() && conf.isAutoSaveAtBeginningOfTurnEnabled() ) {
+                    if ( !isLoadedFromSave && player->isAIAutoControlMode()) {
                         // This is a human player which gave control to AI so we need to do autosave here.
                         Game::AutoSave(Game::AutoSaveType::BeginningTurn);
                     }
@@ -865,7 +865,7 @@ fheroes2::GameMode Interface::AdventureMap::StartGame()
                     AI::Planner::Get().KingdomTurn( kingdom );
 
 #if defined( WITH_DEBUG )
-                    if ( !isLoadedFromSave && player->isAIAutoControlMode() && conf.isAutoSaveAtEndOfTurnEnabled() ) {
+                    if ( !isLoadedFromSave && player->isAIAutoControlMode()) {
                         // This is a human player which gave control to AI so we need to do autosave here.
                         Game::AutoSave(Game::AutoSaveType::EndedTurn);
                     }
