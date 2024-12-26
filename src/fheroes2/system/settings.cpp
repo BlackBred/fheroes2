@@ -323,7 +323,7 @@ bool Settings::Read( const std::string & filePath )
     }
 
     if ( config.Exists( "store auto save on every turn" ) ) {
-        setAutoSaveAtEndOfTurn( config.StrParams( "store auto save on every turn" ) == "on" );
+        setAutoSaveOnAllTurns( config.StrParams( "store auto save on every turn" ) == "on" );
     }
 
     if ( config.Exists( "cursor soft rendering" ) ) {
