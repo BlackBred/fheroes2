@@ -110,11 +110,16 @@ bool Game::AutoSave(AutoSaveType type)
     switch (type) {
         case AutoSaveType::BeginningTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
-               return false;
+                return false;
+            break;
         case AutoSaveType::EndedTurn:
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
                 return false;
-        }
+            break;
+        default:
+            DEBUG_LOG( DBG_GAME, DBG_INFO, "unsuported type of AutoSaveType" );
+            return false;
+    }
     
     return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
 }
