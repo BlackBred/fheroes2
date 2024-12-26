@@ -104,13 +104,7 @@ namespace
         return stream >> hdr.status >> hdr.info >> hdr.gameType;
     }
 }
-enum AutoSaveType
-{
-    BeginningTurn,
-    EndedTurn,
-    //BeginningBattle,
-    //EndedBattle
-};
+
 bool Game::AutoSave(AutoSaveType type)
 {
     switch (type) {

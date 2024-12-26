@@ -36,6 +36,14 @@ namespace Maps
 
 namespace Game
 {
+    enum class AutoSaveType  : uint8_t
+    {
+        BeginningTurn,
+        EndedTurn,
+        //BeginningBattle,
+        //EndedBattle
+    };
+    
     const std::string & GetLastSaveName();
     void SetLastSaveName( const std::string & name );
 
