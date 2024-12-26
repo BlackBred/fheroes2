@@ -109,7 +109,7 @@ bool Game::AutoSave(AutoSaveType type)
 {
     switch (type) {
         case AutoSaveType::BeginningTurn:
-            if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
+            if ( !Settings::Get().isAutoSaveAtBeginningOfTurnEnabled())
                 return false;
             break;
         case AutoSaveType::EndedTurn:
