@@ -78,7 +78,8 @@ public:
 
     static Settings & Get();
 
-    void configureAutoSaveAtBeginningOfTurn(const std::string& scheduleConfig = "# # #");
+    void configureAutoSaveAtBeginningOfTurn( const std::string & scheduleConfig = "# # #" );
+    void parseScheduleConfig(const std::string & string );
     void configureAutoSaveAtEndOfTurn(const std::string& scheduleConfig = "-");
 
     bool Read( const std::string & filePath );
@@ -354,6 +355,8 @@ public:
     static bool findFile( const std::string & internalDirectory, const std::string & fileName, std::string & fullPath );
     static std::string GetLastFile( const std::string & prefix, const std::string & name );
 
+
+
 private:
     friend OStreamBase & operator<<( OStreamBase & stream, const Settings & conf );
     friend IStreamBase & operator>>( IStreamBase & stream, Settings & conf );
@@ -362,6 +365,8 @@ private:
 
     static void setDebug( int debug );
 
+    vector<AutoSaveSchedule> _autosaveAtBeginningOfTurnSchedule;
+    vector<AutoSaveSchedule> _autosaveAtEndOfTurnSchedule;
     // Game related options.
     BitModes _gameOptions;
 
