@@ -50,8 +50,8 @@
 namespace
 {
     const std::string autoSaveName{ "AUTOSAVE" };
-    const std::string autoSaveBeginningName{ "AUTOSAVE_BEGINNING" };
-    const std::string autoSaveEndedeName{ "AUTOSAVE_ENDED" };
+    const std::string autoSaveBeginningName{ "AUTOSAVE_B" };
+    const std::string autoSaveEndedeName{ "AUTOSAVE_E" };
 
     const uint16_t SAV2ID3 = 0xFF03;
 

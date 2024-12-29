@@ -146,6 +146,72 @@ Settings & Settings::Get()
     return conf;
 }
 
+void Settings::configureAutoSaveAtBeginningOfTurn( const std::string& scheduleConfig ) {}
+
+void Settings::configureAutoSaveAtEndOfTurn( const std::string& scheduleConfig )
+{
+    if (scheduleConfig == "-") {
+        setAutoSaveAtEndOfTurn( false );
+        return;
+    }
+    else {
+        std::vector<Segment> segments = parseString(input);
+        setAutoSaveAtEndOfTurn( true );
+    }
+
+}
+
+struct AutoSaveSchedule {
+    std::string scheduleString;
+    std::string month;
+    std::string week;
+    std::string day;
+    std::string turn = "#";
+    std::string command ="+";
+
+    // Конструктор, принимающий строку
+    AutoSaveSchedule(const std::string& scheduleStr) {
+        scheduleString = scheduleStr;
+
+        std::istringstream stream(scheduleStr);
+        stream >> month >> week >> day >> turn >> command;
+
+        ///todo валидировать результат cсоздания объекта
+        bool valid = stream.fail() && stream.eof();
+        valid = valid && (month == "#" || month == "?" || month == "*" || (month >= "1")); //todo добавить адекватную проверку на цифры
+        valid = valid && (week == "#" || week == "?" || week == "*" || (week.length() == 1 && week[0] >= '1' && week[0] <= '4'));
+        valid = valid && (day == "#" || day == "?" || day == "*" || (day.length() == 1 && day[0] >= '1' && day[0] <= '7'));
+        valid = valid && (turn == "#" || turn == "?" || turn == "*" || (turn >= "1" )); //todo добавить адекватную проверку на цифры
+        valid = valid && (command == "+" || command == "-");
+
+        if (!valid) {
+            throw std::invalid_argument("Invalid input string format: " + scheduleStr);
+        }
+    }
+
+    // Оператор сравнения для удаления дубликатов
+    bool operator==(const AutoSaveSchedule& other) const
+    {
+        return month == other.month && week == other.week && day == other.day &&
+               turn == other.turn && command == other.command;
+    }
+};
+
+std::vector<AutoSaveSchedule> parseScheduleConfig(const std::string& scheduleConfig) {
+    std::vector<AutoSaveSchedule> schedules;
+    std::istringstream stream(scheduleConfig);
+    std::string part;
+
+    // Разбиваем строку по '|'
+    while (std::getline(stream, part, '|')) {
+        AutoSaveSchedule schedule(part);
+
+        schedules.push_back(schedule);
+    }
+
+    return schedules;
+}
+
 bool Settings::Read( const std::string & filePath )
 {
     TinyConfig config( '=', '#' );
@@ -316,12 +382,19 @@ bool Settings::Read( const std::string & filePath )
 
     constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
     if ( config.Exists( AUTO_SAVE_BEGINNING ) ) {
-        setAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ) == "on" );
+        //setAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ) == "on" );
+        configureAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ));
+    }
+    else {
+        configureAutoSaveAtBeginningOfTurn();
     }
 
     constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
     if ( config.Exists( AUTO_SAVE_END ) ) {
-        setAutoSaveAtEndOfTurn( config.StrParams( AUTO_SAVE_END ) == "on" );
+        configureAutoSaveAtEndOfTurn( config.StrParams( AUTO_SAVE_END ));
+    }
+    else {
+        configureAutoSaveAtEndOfTurn();
     }
 
     constexpr const char* AUTO_SAVE_EVERY_TURNS = "store auto save on every turn";

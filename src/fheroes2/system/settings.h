@@ -78,6 +78,9 @@ public:
 
     static Settings & Get();
 
+    void configureAutoSaveAtBeginningOfTurn(const std::string& scheduleConfig = "# # #");
+    void configureAutoSaveAtEndOfTurn(const std::string& scheduleConfig = "-");
+
     bool Read( const std::string & filePath );
     bool Save( const std::string_view fileName ) const;
 
