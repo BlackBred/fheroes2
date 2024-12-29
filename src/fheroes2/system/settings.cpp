@@ -168,93 +168,111 @@ void Settings::configureAutoSaveAtEndOfTurn( const std::string& scheduleConfig )
     }
 }
 
-struct AutoSaveSchedule {
+struct AutoSaveSchedule
+{
     std::string scheduleString;
     std::string month;
     std::string week;
     std::string day;
     std::string turn = "#";
-    std::string command ="+";
+    std::string command = "+";
 
-    static bool TryParse(const std::string& scheduleStr, AutoSaveSchedule& schedule) {
-        schedule.scheduleString = scheduleStr;
-
-        std::istringstream stream(scheduleStr);
-        stream >> schedule.month >> schedule.week >> schedule.day >> schedule.turn >> schedule.command;
-
-        ///todo валидировать результат cсоздания объекта
-        bool valid = stream.fail() && stream.eof();
-        valid = valid && (schedule.month == "#" || schedule.month == "?" || schedule.month == "*" || (schedule.month >= "1"));//todo добавить адекватную проверку на цифры
-        valid = valid && (schedule.week == "#" || schedule.week == "?" || schedule.week == "*" || (schedule.week.length() == 1 && schedule.week[0] >= '1' && schedule.week[0] <= '4'));
-        valid = valid && (schedule.day == "#" || schedule.day == "?" || schedule.day == "*" || (schedule.day.length() == 1 && schedule.day[0] >= '1' && schedule.day[0] <= '7'));
-        valid = valid && (schedule.turn == "#" || schedule.turn == "?" || schedule.turn == "*" || (schedule.turn >= "1"));//todo добавить адекватную проверку на цифры
-        valid = valid && (schedule.command == "+" || schedule.command == "-");
-
-        return valid;
-    }
 
     // Оператор сравнения для удаления дубликатов
-    bool operator==(const AutoSaveSchedule& other) const
+    bool operator==( const AutoSaveSchedule & other ) const
     {
-        return month == other.month && week == other.week && day == other.day &&
-               turn == other.turn && command == other.command;
+        return month == other.month && week == other.week && day == other.day && turn == other.turn && command == other.command;
     }
 
-    bool CheckMatch(int m, int w, int d) const {
-        return CheckMonthMatch( m ) && CheckWeekMatch( w ) && CheckDayMatch( d ) && CheckTurnMatch( d+(w-1)*7+(m-1)*28);
+    bool CheckMatch( int m, int w, int d ) const
+    {
+        return CheckMonthMatch( m ) && CheckWeekMatch( w ) && CheckDayMatch( d ) && CheckTurnMatch( d + ( w - 1 ) * 7 + ( m - 1 ) * 28 );
     }
 
-    std::string GetNamePostfix(int m, int w, int d) const {
+    std::string GetNamePostfix( int m, int w, int d ) const
+    {
         std::string postfix;
-        AppendSegment(postfix, month, m);
-        AppendSegment(postfix, week, w);
-        AppendSegment(postfix, day, d);
-        AppendSegment(postfix, turn, d + (w - 1) * 7 + (m - 1) * 28);
+        AppendSegment( postfix, month, m );
+        AppendSegment( postfix, week, w );
+        AppendSegment( postfix, day, d );
+        AppendSegment( postfix, turn, d + ( w - 1 ) * 7 + ( m - 1 ) * 28 );
         return postfix;
     }
 
 private:
-    void AppendSegment(std::string& postfix, const std::string& tmplt, int value) const {
-        std::string segment = GetNameSegmentValue(tmplt, value);
-        if (!segment.empty()) {
-            if (!postfix.empty()) {
+    void AppendSegment( std::string & postfix, const std::string & tmplt, int value ) const
+    {
+        std::string segment = GetNameSegmentValue( tmplt, value );
+        if ( !segment.empty() ) {
+            if ( !postfix.empty() ) {
                 postfix += ":";
             }
             postfix += segment;
         }
     }
 
-    std::string GetNameSegmentValue(const std::string& tmplt, int value) const {
-        if (tmplt == "#") {
+    std::string GetNameSegmentValue( const std::string & tmplt, int value ) const
+    {
+        if ( tmplt == "#" ) {
             return "";
-        } else if (tmplt == "?") {
-            return std::to_string(value);
-        } else if (tmplt == "*") {
+        }
+        else if ( tmplt == "?" ) {
+            return std::to_string( value );
+        }
+        else if ( tmplt == "*" ) {
             return "*";
-        } else {
-            return std::to_string(value);
+        }
+        else {
+            return std::to_string( value );
         }
     }
 
     // Метод проверки соответствия текущего месяца
-    bool CheckMonthMatch(int m) const {
-        return (month == "#" || month == "?" || month == "*" || month == std::to_string(m));
+    bool CheckMonthMatch( int m ) const
+    {
+        return ( month == "#" || month == "?" || month == "*" || month == std::to_string( m ) );
     }
 
-    bool CheckWeekMatch(int w) const {
-        return (week == "#" || week == "?" || week == "*" || week == std::to_string(w));
+    bool CheckWeekMatch( int w ) const
+    {
+        return ( week == "#" || week == "?" || week == "*" || week == std::to_string( w ) );
     }
 
-    bool CheckDayMatch(int d) const {
-        return (day == "#" || day == "?" || day == "*" || day == std::to_string(d));
+    bool CheckDayMatch( int d ) const
+    {
+        return ( day == "#" || day == "?" || day == "*" || day == std::to_string( d ) );
     }
 
-    bool CheckTurnMatch(int t) const {
-        return (turn == "#" || turn == "?" || turn == "*" || turn == std::to_string(t));
+    bool CheckTurnMatch( int t ) const
+    {
+        return ( turn == "#" || turn == "?" || turn == "*" || turn == std::to_string(t));
     }
 };
+bool Settings::AutoSaveSchedule::TryParse( const std::string & scheduleStr, AutoSaveSchedule & schedule )
+{
+    schedule.scheduleString = scheduleStr;
 
-std::vector<AutoSaveSchedule> parseScheduleConfig(const std::string& scheduleConfig) {
+    std::istringstream stream( scheduleStr );
+    stream >> schedule.month >> schedule.week >> schedule.day >> schedule.turn >> schedule.command;
+
+    /// todo валидировать результат cсоздания объекта
+    bool valid =true;// = stream.fail() && stream.eof();
+    valid = valid
+            && ( schedule.month == "#" || schedule.month == "?" || schedule.month == "*" || ( schedule.month >= "1" ) ); // todo добавить адекватную проверку на цифры
+    valid = valid
+            && ( schedule.week == "#" || schedule.week == "?" || schedule.week == "*"
+                 || ( schedule.week.length() == 1 && schedule.week[0] >= '1' && schedule.week[0] <= '4' ) );
+    valid = valid
+            && ( schedule.day == "#" || schedule.day == "?" || schedule.day == "*"
+                 || ( schedule.day.length() == 1 && schedule.day[0] >= '1' && schedule.day[0] <= '7' ) );
+    valid
+        = valid && ( schedule.turn == "#" || schedule.turn == "?" || schedule.turn == "*" || ( schedule.turn >= "1" ) ); // todo добавить адекватную проверку на цифры
+    valid = valid && ( schedule.command == "+" || schedule.command == "-" );
+
+    return valid;
+}
+
+std::vector<Settings::AutoSaveSchedule> Settings::parseScheduleConfig(const std::string& scheduleConfig) {
     std::vector<AutoSaveSchedule> schedules;
     std::istringstream stream(scheduleConfig);
     std::string part;
@@ -262,7 +280,7 @@ std::vector<AutoSaveSchedule> parseScheduleConfig(const std::string& scheduleCon
     // Разбиваем строку по '|'
     while (std::getline(stream, part, '|')) {
         AutoSaveSchedule schedule;
-        if (AutoSaveSchedule::TryParse("3 ? 5 1 +", schedule)) {
+        if (AutoSaveSchedule::TryParse(part, schedule)) {
             schedules.push_back(schedule);
         } else {
             //todo записать worn в лог
