@@ -415,11 +415,11 @@ std::vector<std::string> Game::GetAutoSaveFileName(AutoSaveType type)
     switch (type) {
     case AutoSaveType::BeginningTurn:
         fileName = autoSaveBeginningName;
-        //schedules = Settings::Get().getAutoSaveAtBeginningOfTurnSchedule();
+        schedules = Settings::Get().getAutoSaveAtBeginningOfTurnSchedule();
         break;
     case AutoSaveType::EndedTurn:
         fileName = autoSaveEndedeName;
-        //schedules = Settings::Get().getAutoSaveAtEndOfTurnSchedule();
+        schedules = Settings::Get().getAutoSaveAtEndOfTurnSchedule();
         break;
     default:
         //todo add flag for using single general name

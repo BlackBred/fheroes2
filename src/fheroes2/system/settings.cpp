@@ -167,8 +167,14 @@ void Settings::configureAutoSaveAtEndOfTurn( const std::string& scheduleConfig )
         setAutoSaveAtEndOfTurn( true );
     }
 }
+std::vector<AutoSaveSchedule> Settings::getAutoSaveAtBeginningOfTurnSchedule() const {
+    return _autosaveAtBeginningOfTurnSchedule;
+}
 
-
+std::vector<AutoSaveSchedule> Settings::getAutoSaveAtEndOfTurnSchedule() const
+{
+    return _autosaveAtEndOfTurnSchedule;
+}
 
 
     // Оператор сравнения для удаления дубликатов

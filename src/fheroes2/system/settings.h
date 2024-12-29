@@ -107,6 +107,9 @@ public:
 
     static Settings & Get();
 
+    std::vector<AutoSaveSchedule> getAutoSaveAtBeginningOfTurnSchedule() const;
+    std::vector<AutoSaveSchedule> getAutoSaveAtEndOfTurnSchedule() const;
+
     void configureAutoSaveAtBeginningOfTurn( const std::string & scheduleConfig = "# # #" );
     void configureAutoSaveAtEndOfTurn(const std::string& scheduleConfig = "-");
 
