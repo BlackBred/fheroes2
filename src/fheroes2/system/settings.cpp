@@ -168,28 +168,21 @@ void Settings::configureAutoSaveAtEndOfTurn( const std::string& scheduleConfig )
     }
 }
 
-struct AutoSaveSchedule
-{
-    std::string scheduleString;
-    std::string month;
-    std::string week;
-    std::string day;
-    std::string turn = "#";
-    std::string command = "+";
+
 
 
     // Оператор сравнения для удаления дубликатов
-    bool operator==( const AutoSaveSchedule & other ) const
+    bool AutoSaveSchedule::operator==( const AutoSaveSchedule & other ) const
     {
         return month == other.month && week == other.week && day == other.day && turn == other.turn && command == other.command;
     }
 
-    bool CheckMatch( int m, int w, int d ) const
+    bool AutoSaveSchedule::CheckMatch( int m, int w, int d ) const
     {
         return CheckMonthMatch( m ) && CheckWeekMatch( w ) && CheckDayMatch( d ) && CheckTurnMatch( d + ( w - 1 ) * 7 + ( m - 1 ) * 28 );
     }
 
-    std::string GetNamePostfix( int m, int w, int d ) const
+    std::string AutoSaveSchedule::GetNamePostfix( int m, int w, int d ) const
     {
         std::string postfix;
         AppendSegment( postfix, month, m );
@@ -199,8 +192,8 @@ struct AutoSaveSchedule
         return postfix;
     }
 
-private:
-    void AppendSegment( std::string & postfix, const std::string & tmplt, int value ) const
+
+    void AutoSaveSchedule::AppendSegment( std::string & postfix, const std::string & tmplt, int value ) const
     {
         std::string segment = GetNameSegmentValue( tmplt, value );
         if ( !segment.empty() ) {
@@ -211,7 +204,7 @@ private:
         }
     }
 
-    std::string GetNameSegmentValue( const std::string & tmplt, int value ) const
+    std::string AutoSaveSchedule::GetNameSegmentValue( const std::string & tmplt, int value ) const
     {
         if ( tmplt == "#" ) {
             return "";
@@ -228,27 +221,27 @@ private:
     }
 
     // Метод проверки соответствия текущего месяца
-    bool CheckMonthMatch( int m ) const
+    bool AutoSaveSchedule::CheckMonthMatch( int m ) const
     {
         return ( month == "#" || month == "?" || month == "*" || month == std::to_string( m ) );
     }
 
-    bool CheckWeekMatch( int w ) const
+    bool AutoSaveSchedule::CheckWeekMatch( int w ) const
     {
         return ( week == "#" || week == "?" || week == "*" || week == std::to_string( w ) );
     }
 
-    bool CheckDayMatch( int d ) const
+    bool AutoSaveSchedule::CheckDayMatch( int d ) const
     {
         return ( day == "#" || day == "?" || day == "*" || day == std::to_string( d ) );
     }
 
-    bool CheckTurnMatch( int t ) const
+    bool AutoSaveSchedule::CheckTurnMatch( int t ) const
     {
         return ( turn == "#" || turn == "?" || turn == "*" || turn == std::to_string(t));
     }
-};
-bool Settings::AutoSaveSchedule::TryParse( const std::string & scheduleStr, AutoSaveSchedule & schedule )
+
+bool AutoSaveSchedule::TryParse( const std::string & scheduleStr, AutoSaveSchedule & schedule )
 {
     schedule.scheduleString = scheduleStr;
 
@@ -272,7 +265,7 @@ bool Settings::AutoSaveSchedule::TryParse( const std::string & scheduleStr, Auto
     return valid;
 }
 
-std::vector<Settings::AutoSaveSchedule> Settings::parseScheduleConfig(const std::string& scheduleConfig) {
+std::vector<AutoSaveSchedule> Settings::parseScheduleConfig(const std::string& scheduleConfig) {
     std::vector<AutoSaveSchedule> schedules;
     std::istringstream stream(scheduleConfig);
     std::string part;

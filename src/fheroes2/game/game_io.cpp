@@ -120,8 +120,18 @@ bool Game::AutoSave(AutoSaveType type)
             DEBUG_LOG( DBG_GAME, DBG_INFO, "unsuported type of AutoSaveType" );
             return false;
     }
-    
-    return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
+
+    auto names = GetAutoSaveFileName( type );
+    bool result = true;
+
+    for (const auto & name : names) {
+        result = result && Game::Save( System::concatPath( GetSaveDir(), name), true );
+    }
+
+    return result;
+
+    //return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
+
 }
 
 bool Game::Save( const std::string & filePath, const bool autoSave /* = false */ )
@@ -396,27 +406,39 @@ std::string Game::GetSaveFileBaseName()
     return baseName;
 }
 
-std::string Game::GetAutoSaveFileName(AutoSaveType type)
+std::vector<std::string> Game::GetAutoSaveFileName(AutoSaveType type)
 {
     std::string fileName;
-    
+    std::vector<AutoSaveSchedule> schedules; ;
+    std::vector<std::string> names; ;
+   ;
     switch (type) {
     case AutoSaveType::BeginningTurn:
         fileName = autoSaveBeginningName;
+        //schedules = Settings::Get().getAutoSaveAtBeginningOfTurnSchedule();
         break;
     case AutoSaveType::EndedTurn:
         fileName = autoSaveEndedeName;
+        //schedules = Settings::Get().getAutoSaveAtEndOfTurnSchedule();
         break;
     default:
         //todo add flag for using single general name
         fileName = autoSaveName;
     }
 
-    if (Settings::Get().isAutoSaveOnAllTurnsEnabled()) {
-        fileName += "_" + std::to_string( world.GetMonth() ) + ":" + std::to_string( world.GetWeek() ) + ":"+ std::to_string( world.GetDay() );
+    for (const auto& schedule : schedules) {
+        if (schedule.CheckMatch(world.GetMonth(), world.GetWeek(), world.GetDay())) {
+             names.push_back(fileName + schedule.GetNamePostfix(world.GetMonth(), world.GetWeek(), world.GetDay())+ GetSaveFileExtension());
+        }
     }
+
+    //if (Settings::Get().isAutoSaveOnAllTurnsEnabled()) {
+    //    fileName += "_" + std::to_string( world.GetMonth() ) + ":" + std::to_string( world.GetWeek() ) + ":"+ std::to_string( world.GetDay() );
+    //}
     
-    return fileName + GetSaveFileExtension();
+    //return fileName + GetSaveFileExtension();
+
+    return names;
 }
 
 std::string Game::GetSaveFileExtension()

@@ -65,6 +65,35 @@ enum class ZoomLevel : uint8_t
     ZoomLevel3 = 3, // Max zoom, but should only exists for debug builds
 };
 
+class AutoSaveSchedule {
+    std::string scheduleString;
+    std::string month;
+    std::string week;
+    std::string day;
+    std::string turn = "#";
+    std::string command = "+";
+
+public:
+    // Статический метод для разбора строки
+    static bool TryParse(const std::string& scheduleStr, AutoSaveSchedule& schedule);
+
+    // Оператор сравнения для удаления дубликатов
+    bool operator==(const AutoSaveSchedule& other) const;
+
+    // Методы проверки совпадений
+    bool CheckMatch(int m, int w, int d) const;
+    std::string GetNamePostfix(int m, int w, int d) const;
+
+private:
+    // Вспомогательные приватные методы
+    void AppendSegment(std::string& postfix, const std::string& tmplt, int value) const;
+    std::string GetNameSegmentValue(const std::string& tmplt, int value) const;
+    bool CheckMonthMatch(int m) const;
+    bool CheckWeekMatch(int w) const;
+    bool CheckDayMatch(int d) const;
+    bool CheckTurnMatch(int t) const;
+};
+
 class Settings
 {
 public:
@@ -354,33 +383,7 @@ public:
     static bool findFile( const std::string & internalDirectory, const std::string & fileName, std::string & fullPath );
     static std::string GetLastFile( const std::string & prefix, const std::string & name );
 
-    struct AutoSaveSchedule {
-        std::string scheduleString;
-        std::string month;
-        std::string week;
-        std::string day;
-        std::string turn = "#";
-        std::string command = "+";
 
-        // Статический метод для разбора строки
-        static bool TryParse(const std::string& scheduleStr, AutoSaveSchedule& schedule);
-
-        // Оператор сравнения для удаления дубликатов
-        bool operator==(const AutoSaveSchedule& other) const;
-
-        // Методы проверки совпадений
-        bool CheckMatch(int m, int w, int d) const;
-        std::string GetNamePostfix(int m, int w, int d) const;
-
-    private:
-        // Вспомогательные приватные методы
-        void AppendSegment(std::string& postfix, const std::string& tmplt, int value) const;
-        std::string GetNameSegmentValue(const std::string& tmplt, int value) const;
-        bool CheckMonthMatch(int m) const;
-        bool CheckWeekMatch(int w) const;
-        bool CheckDayMatch(int d) const;
-        bool CheckTurnMatch(int t) const;
-    };
 
     std::vector<AutoSaveSchedule>  parseScheduleConfig(const std::string & string );
 

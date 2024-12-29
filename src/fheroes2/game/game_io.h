@@ -52,7 +52,7 @@ namespace Game
 
     std::string GetSaveDir();
     std::string GetSaveFileBaseName();
-    std::string GetAutoSaveFileName(AutoSaveType type);
+    std::vector<std::string> GetAutoSaveFileName(AutoSaveType type);
     std::string GetSaveFileExtension();
     std::string GetSaveFileExtension( const int gameType );
 
