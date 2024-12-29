@@ -204,50 +204,26 @@ struct AutoSaveSchedule {
         return CheckMonthMatch( m ) && CheckWeekMatch( w ) && CheckDayMatch( d ) && CheckTurnMatch( d+(w-1)*7+(m-1)*28);
     }
 
-    std::string GetNamePostfix(int m, int w, int d) const
-    {
-        std::string postfix = "";
-        std::string segmant = GetNameSegmentValue(month, m);
-        if (segmant != "") {
-            if (postfix == "") {
-                postfix= segmant;
-            }
-            else {
-                postfix += ":" + segmant;
-            }
-        }
-        segmant = GetNameSegmentValue(week, w);
-        if (segmant != "") {
-            if (postfix == "") {
-                postfix= segmant;
-            }
-            else {
-                postfix += ":" + segmant;
-            }
-        }
-        segmant = GetNameSegmentValue(day, d);
-        if (segmant != "") {
-            if (postfix == "") {
-                postfix= segmant;
-            }
-            else {
-                postfix += ":" + segmant;
-            }
-        }
-        segmant = GetNameSegmentValue(turn, d+(w-1)*7+(m-1)*28);
-        if (segmant != "") {
-            if (postfix == "") {
-                postfix= segmant;
-            }
-            else {
-                postfix += ":" + segmant;
-            }
-        }
-
+    std::string GetNamePostfix(int m, int w, int d) const {
+        std::string postfix;
+        AppendSegment(postfix, month, m);
+        AppendSegment(postfix, week, w);
+        AppendSegment(postfix, day, d);
+        AppendSegment(postfix, turn, d + (w - 1) * 7 + (m - 1) * 28);
         return postfix;
     }
 
 private:
+    void AppendSegment(std::string& postfix, const std::string& tmplt, int value) const {
+        std::string segment = GetNameSegmentValue(tmplt, value);
+        if (!segment.empty()) {
+            if (!postfix.empty()) {
+                postfix += ":";
+            }
+            postfix += segment;
+        }
+    }
+
     std::string GetNameSegmentValue(const std::string& tmplt, int value) const {
         if (tmplt == "#") {
             return "";
