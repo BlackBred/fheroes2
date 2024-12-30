@@ -125,7 +125,7 @@ bool Game::AutoSave(AutoSaveType type)
     bool result = true;
 
     for (const auto & name : names) {
-        result = result && Game::Save( System::concatPath( GetSaveDir(), name), true );
+        result = result && Game::Save( System::concatPath( GetSaveDir(true), name), true );
     }
 
     return result;
@@ -139,6 +139,13 @@ bool Game::Save( const std::string & filePath, const bool autoSave /* = false */
     DEBUG_LOG( DBG_GAME, DBG_INFO, filePath )
 
     const Settings & conf = Settings::Get();
+
+    std::filesystem::path filePathObj(filePath);
+    std::error_code ec;
+    if (!std::filesystem::create_directories(filePathObj.parent_path(), ec) && ec) {
+        DEBUG_LOG(DBG_GAME, DBG_WARN, "Error creating directories for the file " << filePath << ": " << ec.message());
+        return false;
+    }
 
     StreamFile fileStream;
     fileStream.setBigendian( true );
@@ -381,9 +388,16 @@ void Game::SetLastSaveName( const std::string & name )
     lastSaveName = name;
 }
 
-std::string Game::GetSaveDir()
+std::string Game::GetSaveDir(const bool autoSave)
 {
-    return System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
+    std::string path = System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
+
+    // todo добавить проверку флага
+    if (autoSave) {
+        path = System::concatPath( path, "auto" );
+    }
+
+    return path;
 }
 
 std::string Game::GetSaveFileBaseName()

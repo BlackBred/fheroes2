@@ -134,7 +134,7 @@ namespace
         std::error_code ec;
 
         // Using the non-throwing overload
-        for ( const std::filesystem::directory_entry & entry : std::filesystem::directory_iterator( correctedPath, ec ) ) {
+        for ( const std::filesystem::directory_entry & entry : std::filesystem::recursive_directory_iterator( correctedPath, ec ) ) {
             // Using the non-throwing overload
             if ( !entry.is_regular_file( ec ) ) {
                 continue;
