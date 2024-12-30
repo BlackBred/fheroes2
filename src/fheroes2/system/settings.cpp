@@ -148,6 +148,7 @@ Settings & Settings::Get()
 
 void Settings::configureAutoSaveAtBeginningOfTurn( const std::string& scheduleConfig )
 {
+    //todo обработать on/off
     if (scheduleConfig == "-") {
         setAutoSaveAtBeginningOfTurn( false );
     }
