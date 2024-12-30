@@ -204,8 +204,12 @@ std::vector<AutoSaveSchedule> Settings::getAutoSaveAtEndOfTurnSchedule() const
         std::string segment = GetNameSegmentValue( tmplt, value );
         if ( !segment.empty() ) {
             if ( !postfix.empty() ) {
-                postfix += ":";
+                postfix += ".";
             }
+            else {
+                postfix += "_";
+            }
+
             postfix += segment;
         }
     }
@@ -219,7 +223,7 @@ std::vector<AutoSaveSchedule> Settings::getAutoSaveAtEndOfTurnSchedule() const
             return std::to_string( value );
         }
         else if ( tmplt == "*" ) {
-            return "*";
+            return "x";
         }
         else {
             return std::to_string( value );
