@@ -99,6 +99,9 @@ std::string Settings::GetVersion()
     return std::to_string( MAJOR_VERSION ) + '.' + std::to_string( MINOR_VERSION ) + '.' + std::to_string( INTERMEDIATE_VERSION );
 }
 
+constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
+constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
+
 Settings::Settings()
     : _resolutionInfo( fheroes2::Display::DEFAULT_WIDTH, fheroes2::Display::DEFAULT_HEIGHT )
     , _gameDifficulty( Difficulty::NORMAL )
@@ -466,7 +469,6 @@ bool Settings::Read( const std::string & filePath )
         setSystemInfo( config.StrParams( "system info" ) == "on" );
     }
 
-    constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
     if ( config.Exists( AUTO_SAVE_BEGINNING ) ) {
         //setAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ) == "on" );
         configureAutoSaveAtBeginningOfTurn( config.StrParams( AUTO_SAVE_BEGINNING ));
@@ -475,7 +477,6 @@ bool Settings::Read( const std::string & filePath )
         configureAutoSaveAtBeginningOfTurn();
     }
 
-    constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
     if ( config.Exists( AUTO_SAVE_END ) ) {
         configureAutoSaveAtEndOfTurn( config.StrParams( AUTO_SAVE_END ));
     }
@@ -648,12 +649,22 @@ std::string Settings::String() const
 
     os << std::endl << "# display system information: on/off" << std::endl;
     os << "system info = " << ( _gameOptions.Modes( GAME_SYSTEM_INFO ) ? "on" : "off" ) << std::endl;
-    
-    os << std::endl << "# should auto save be performed at the beginning of the turn: on/off" << std::endl;
-    os << "auto save at the beginning of the turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" ) << std::endl;
 
-    os << std::endl << "# should auto save be performed at the end of the turn: on/off" << std::endl;
-    os << "auto save at the end of the turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" ) << std::endl;
+    os << std::endl << R"(# should auto save be performed at the beginning of the turn: "-" or "{m} {w} {d} {t} {c}")" << std::endl;
+    os << "#        m w d [t=#] [c=+]" << std::endl;
+    os << "#        | | |  |     |" << std::endl;
+    os << "#        | | |  |     - command" << std::endl;
+    os << "#        | | |  ------- turn" << std::endl;
+    os << "#        | | ---------- day" << std::endl;
+    os << "#        | ------------ week" << std::endl;
+    os << "#        -------------- month" << std::endl;
+    os << "# Values: ? - any display value, * - any masked value, # - any ignored value" << std::endl;
+    os << R"(# You can specify several templates separated by the "|" symbol. Autosaving will be performed independently for each of them.)" << std::endl;
+    os << AUTO_SAVE_BEGINNING << " = " << R"(# # #|? ? 1|? ? 4)" << std::endl;
+
+    //todo заменить _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" и _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" на приведение к строке значений дефолтных шаблонов
+    os << std::endl << R"(# should auto save be performed at the end of the turn: "-" or "{m} {w} {d} {t} {c}")" << std::endl;
+    os << AUTO_SAVE_END  << " = " << "# # #" << std::endl;
 
     os << std::endl << "# should auto save be stored on every turn: on/off" << std::endl;
     os << "store auto save on every turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS ) ? "on" : "off" ) << std::endl;
