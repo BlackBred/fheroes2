@@ -225,7 +225,6 @@ public:
     bool isAutoSaveAtBeginningOfTurnEnabled() const;
     bool isAutoSaveAtEndOfTurnEnabled() const;
     bool isAutoSaveOnAllTurnsEnabled() const;
-    bool isAutoSavesInSubdirEnabled() const;
     bool isBattleShowDamageInfoEnabled() const;
     bool isHideInterfaceEnabled() const;
     bool isEvilInterfaceEnabled() const;
@@ -291,7 +290,6 @@ public:
     void setAutoSaveAtBeginningOfTurn( const bool enable );
     void setAutoSaveAtEndOfTurn( const bool enable );
     void setAutoSaveOnAllTurns( bool enable );
-    void setAutoSavesInSubdir( bool enable );
     void setBattleDamageInfo( const bool enable );
     void setHideInterface( const bool enable );
     void setEvilInterface( const bool enable );
