@@ -81,7 +81,7 @@ namespace
         GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN = 0x10000000,
         GAME_SCREEN_SCALING_TYPE_NEAREST = 0x20000000,
         GAME_AUTO_SAVE_AT_END_OF_TURN = 0x40000000,
-        GAME_AUTO_SAVE_ON_ALL_TURNS = 0x80000000
+        GAME_AUTO_SAVES_IN_SUBDIR = 0x80000000
     };
 
     enum EditorOptions : uint32_t
@@ -101,6 +101,7 @@ std::string Settings::GetVersion()
 
 constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
 constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
+constexpr const char* AUTO_SAVES_SUBDIR = "store auto saves in the separated subdirectory";
 
 Settings::Settings()
     : _resolutionInfo( fheroes2::Display::DEFAULT_WIDTH, fheroes2::Display::DEFAULT_HEIGHT )
@@ -489,6 +490,10 @@ bool Settings::Read( const std::string & filePath )
         setAutoSaveOnAllTurns( config.StrParams( AUTO_SAVE_EVERY_TURNS ) == "on" );
     }
 
+    if ( config.Exists( AUTO_SAVES_SUBDIR ) ) {
+        setAutoSavesInSubdir( config.StrParams( AUTO_SAVES_SUBDIR ) == "on" );
+    }
+
     if ( config.Exists( "cursor soft rendering" ) ) {
         if ( config.StrParams( "cursor soft rendering" ) == "on" ) {
             _gameOptions.SetModes( GAME_CURSOR_SOFT_EMULATION );
@@ -665,6 +670,9 @@ std::string Settings::String() const
     //todo заменить _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" и _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" на приведение к строке значений дефолтных шаблонов
     os << std::endl << R"(# should auto save be performed at the end of the turn: "-" or "{m} {w} {d} {t} {c}")" << std::endl;
     os << AUTO_SAVE_END  << " = " << "# # #" << std::endl;
+
+    os << std::endl << "# should auto save be stored in seporated sub directory 'auto': on/off" << std::endl;
+    os << AUTO_SAVES_SUBDIR << " = " << ( _gameOptions.Modes( GAME_AUTO_SAVES_IN_SUBDIR ) ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# should auto save be stored on every turn: on/off" << std::endl;
     os << "store auto save on every turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS ) ? "on" : "off" ) << std::endl;
@@ -1004,6 +1012,15 @@ void Settings::setAutoSaveOnAllTurns( const bool enable )
         _gameOptions.ResetModes( GAME_AUTO_SAVE_ON_ALL_TURNS );
     }
 }
+void Settings::setAutoSavesInSubdir( const bool enable )
+{
+    if ( enable ) {
+        _gameOptions.SetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+    }
+    else {
+        _gameOptions.ResetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+    }
+}
 
 void Settings::setBattleDamageInfo( const bool enable )
 {
@@ -1089,6 +1106,11 @@ bool Settings::isAutoSaveAtEndOfTurnEnabled() const
 bool Settings::isAutoSaveOnAllTurnsEnabled() const  
 {
     return _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS );
+}
+
+bool Settings::isAutoSavesInSubdirEnabled() const
+{
+    return _gameOptions.Modes( GAME_AUTO_SAVES_IN_SUBDIR );
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const
