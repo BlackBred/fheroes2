@@ -365,9 +365,8 @@ void Game::SetLastSaveName( const std::string & name )
 std::string Game::GetSaveDir(const bool autoSave)
 {
     std::string path = System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
-
-    // todo добавить проверку флага
-    if (autoSave) {
+    
+    if (autoSave && Settings::Get().isAutoSavesInSubdirEnabled()) {
         path = System::concatPath( path, "auto" );
     }
 

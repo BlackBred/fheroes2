@@ -188,6 +188,7 @@ public:
     bool is3DAudioEnabled() const;
     bool isSystemInfoEnabled() const;
     bool isAutoSaveAtBeginningOfTurnEnabled() const;
+    bool isAutoSavesInSubdirEnabled() const;
     bool isBattleShowDamageInfoEnabled() const;
     bool isHideInterfaceEnabled() const;
     bool isEvilInterfaceEnabled() const;
@@ -251,6 +252,7 @@ public:
     void setVSync( const bool enable );
     void setSystemInfo( const bool enable );
     void setAutoSaveAtBeginningOfTurn( const bool enable );
+    void setAutoSavesInSubdir( bool enable );
     void setBattleDamageInfo( const bool enable );
     void setHideInterface( const bool enable );
     void setEvilInterface( const bool enable );
