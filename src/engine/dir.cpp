@@ -77,6 +77,7 @@ namespace
 
 #if defined( TARGET_PS_VITA )
         // On PS Vita, getting a list of files using std::filesystem for some reason works much slower than using the native file system API
+        // todo добавить поддержку рекурсовного обхода директорий
         class SceUIDWrapper
         {
         public:
@@ -134,6 +135,7 @@ namespace
         std::error_code ec;
 
         // Using the non-throwing overload
+        // todo сделать рекурсивный обход подкаталогов управляемым через опции
         for ( const std::filesystem::directory_entry & entry : std::filesystem::recursive_directory_iterator( correctedPath, ec ) ) {
             // Using the non-throwing overload
             if ( !entry.is_regular_file( ec ) ) {
