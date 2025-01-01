@@ -109,6 +109,8 @@ public:
 
     std::vector<AutoSaveSchedule> getAutoSaveAtBeginningOfTurnSchedule() const;
     std::vector<AutoSaveSchedule> getAutoSaveAtEndOfTurnSchedule() const;
+    std::vector<AutoSaveSchedule> getDefaultAutoSaveSchedule() const;
+
 
     void configureAutoSaveAtBeginningOfTurn( const std::string & scheduleConfig = "# # #" );
     void configureAutoSaveAtEndOfTurn(const std::string& scheduleConfig = "-");
@@ -393,7 +395,7 @@ public:
 
 
     std::vector<AutoSaveSchedule>  parseScheduleConfig(const std::string & string );
-
+    std::vector<AutoSaveSchedule> _defaultAutosaveSchedule;
 private:
     friend OStreamBase & operator<<( OStreamBase & stream, const Settings & conf );
     friend IStreamBase & operator>>( IStreamBase & stream, Settings & conf );
@@ -404,6 +406,7 @@ private:
 
     std::vector<AutoSaveSchedule> _autosaveAtBeginningOfTurnSchedule;
     std::vector<AutoSaveSchedule> _autosaveAtEndOfTurnSchedule;
+
     // Game related options.
     BitModes _gameOptions;
 

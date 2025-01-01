@@ -40,8 +40,8 @@ namespace Game
     {
         BeginningTurn,
         EndedTurn,
-        //BeginningBattle,
-        //EndedBattle
+        BeginningBattle,
+        EndedBattle
     };
     
     const std::string & GetLastSaveName();

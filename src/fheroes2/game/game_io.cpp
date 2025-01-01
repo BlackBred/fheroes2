@@ -116,6 +116,14 @@ bool Game::AutoSave(AutoSaveType type)
             if ( !Settings::Get().isAutoSaveAtEndOfTurnEnabled())
                 return false;
             break;
+        case   AutoSaveType::BeginningBattle:
+            //if ( !Settings::Get().isAutoSaveAtBeginningOfBattleEnabled())
+            //    return false;
+            break;
+        case AutoSaveType::EndedBattle:
+            //if ( !Settings::Get().isAutoSaveAtEndOfBattleEnabled())
+            //    return false;
+            break;
         default:
             DEBUG_LOG( DBG_GAME, DBG_INFO, "unsuported type of AutoSaveType" );
             return false;
@@ -440,6 +448,14 @@ std::vector<std::string> Game::GetAutoSaveFileName(AutoSaveType type)
         fileName = autoSaveEndedeName;
         schedules = Settings::Get().getAutoSaveAtEndOfTurnSchedule();
         break;
+    case AutoSaveType::BeginningBattle:
+        fileName = "BattleSave_B";
+        schedules = Settings::Get().getDefaultAutoSaveSchedule();
+        break;
+    case AutoSaveType::EndedBattle:
+        fileName = "BattleSave_E";
+        schedules = Settings::Get().getDefaultAutoSaveSchedule();
+        break;
     default:
         //todo add flag for using single general name
         fileName = autoSaveName;
@@ -451,11 +467,6 @@ std::vector<std::string> Game::GetAutoSaveFileName(AutoSaveType type)
         }
     }
 
-    //if (Settings::Get().isAutoSaveOnAllTurnsEnabled()) {
-    //    fileName += "_" + std::to_string( world.GetMonth() ) + ":" + std::to_string( world.GetWeek() ) + ":"+ std::to_string( world.GetDay() );
-    //}
-    
-    //return fileName + GetSaveFileExtension();
 
     return names;
 }

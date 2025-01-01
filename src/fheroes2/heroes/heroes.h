@@ -553,6 +553,7 @@ public:
     void SetMove( const bool enable );
     bool isAction() const;
     void ResetAction();
+    bool isBattle(const MP2::MapObjectType objectType);
     void Action( int tileIndex );
     void ActionNewPosition( const bool allowMonsterAttack );
     void ApplyPenaltyMovement( uint32_t penalty );

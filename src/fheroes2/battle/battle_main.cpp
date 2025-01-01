@@ -278,6 +278,7 @@ namespace
 
 Battle::Result Battle::Loader( Army & army1, Army & army2, int32_t mapsindex )
 {
+    //Game::AutoSave( Game::AutoSaveType::BeginningBattle);
     Result result;
 
     // Validate the arguments - check if battle should even load
@@ -478,6 +479,9 @@ Battle::Result Battle::Loader( Army & army1, Army & army2, int32_t mapsindex )
     }
 
     DEBUG_LOG( DBG_BATTLE, DBG_INFO, "army1: " << ( result.army1 & RESULT_WINS ? "wins" : "loss" ) << ", army2: " << ( result.army2 & RESULT_WINS ? "wins" : "loss" ) )
+
+    //todo битва уже закончилась, но объект на который было совершено нападение еще не изменил своего состояния
+    //Game::AutoSave( Game::AutoSaveType::EndedBattle);
 
     return result;
 }

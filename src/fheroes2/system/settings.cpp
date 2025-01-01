@@ -172,6 +172,10 @@ std::vector<AutoSaveSchedule> Settings::getAutoSaveAtEndOfTurnSchedule() const
 {
     return _autosaveAtEndOfTurnSchedule;
 }
+std::vector<AutoSaveSchedule> Settings::getDefaultAutoSaveSchedule() const
+{
+    return _defaultAutosaveSchedule;
+}
 
 
     // Оператор сравнения для удаления дубликатов
@@ -476,6 +480,8 @@ bool Settings::Read( const std::string & filePath )
     else {
         configureAutoSaveAtEndOfTurn();
     }
+
+    _defaultAutosaveSchedule = parseScheduleConfig( "# # #" );
 
     if ( config.Exists( AUTO_SAVES_SUBDIR ) ) {
         setAutoSavesInSubdir( config.StrParams( AUTO_SAVES_SUBDIR ) == "on" );

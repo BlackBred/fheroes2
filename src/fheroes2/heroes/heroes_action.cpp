@@ -3701,6 +3701,10 @@ void Heroes::Action( int tileIndex )
         I.redraw( Interface::REDRAW_GAMEAREA | Interface::REDRAW_RADAR_CURSOR | Interface::REDRAW_HEROES );
     }
 
+    if (isBattle(objectType)) {
+        Game::AutoSave( Game::AutoSaveType::BeginningBattle);
+    }
+
     switch ( objectType ) {
     case MP2::OBJ_MONSTER:
         ActionToMonster( *this, tileIndex );
@@ -3953,4 +3957,15 @@ void Heroes::Action( int tileIndex )
     default:
         break;
     }
+
+    if (isBattle(objectType)) {
+        Game::AutoSave( Game::AutoSaveType::EndedBattle);
+    }
+
 }
+static bool isBattle(const MP2::MapObjectType objectType)
+{
+    return objectType == MP2::OBJ_MONSTER || objectType == MP2::OBJ_CASTLE || objectType == MP2::OBJ_HERO || objectType == MP2::OBJ_BOAT || objectType == MP2::OBJ_COAST;
+
+}
+
