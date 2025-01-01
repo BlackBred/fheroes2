@@ -390,14 +390,7 @@ void Game::SetLastSaveName( const std::string & name )
 
 std::string Game::GetSaveDir(const bool autoSave)
 {
-    std::string path = System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
-
-    // todo добавить проверку флага
-    if (autoSave) {
-        path = System::concatPath( path, "auto" );
-    }
-
-    return path;
+    return System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
 }
 
 std::string Game::GetSaveFileBaseName()

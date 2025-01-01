@@ -222,9 +222,10 @@ public:
     bool isTextSupportModeEnabled() const;
     bool is3DAudioEnabled() const;
     bool isSystemInfoEnabled() const;
+
     bool isAutoSaveAtBeginningOfTurnEnabled() const;
     bool isAutoSaveAtEndOfTurnEnabled() const;
-    bool isAutoSaveOnAllTurnsEnabled() const;
+
     bool isBattleShowDamageInfoEnabled() const;
     bool isHideInterfaceEnabled() const;
     bool isEvilInterfaceEnabled() const;
@@ -287,9 +288,6 @@ public:
     void set3DAudio( const bool enable );
     void setVSync( const bool enable );
     void setSystemInfo( const bool enable );
-    void setAutoSaveAtBeginningOfTurn( const bool enable );
-    void setAutoSaveAtEndOfTurn( const bool enable );
-    void setAutoSaveOnAllTurns( bool enable );
     void setBattleDamageInfo( const bool enable );
     void setHideInterface( const bool enable );
     void setEvilInterface( const bool enable );

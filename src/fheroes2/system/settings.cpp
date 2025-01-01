@@ -78,10 +78,9 @@ namespace
         GAME_BATTLE_SHOW_MOVE_SHADOW = 0x02000000,
         GAME_BATTLE_AUTO_RESOLVE = 0x04000000,
         GAME_BATTLE_AUTO_SPELLCAST = 0x08000000,
-        GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN = 0x10000000,
+
         GAME_SCREEN_SCALING_TYPE_NEAREST = 0x20000000,
-        GAME_AUTO_SAVE_AT_END_OF_TURN = 0x40000000,
-        GAME_AUTO_SAVE_ON_ALL_TURNS = 0x80000000
+
     };
 
     enum EditorOptions : uint32_t
@@ -152,25 +151,16 @@ Settings & Settings::Get()
 void Settings::configureAutoSaveAtBeginningOfTurn( const std::string& scheduleConfig )
 {
     //todo обработать on/off
-    if (scheduleConfig == "-") {
-        setAutoSaveAtBeginningOfTurn( false );
-    }
-    else {
+//    if (scheduleConfig == "-") {
         _autosaveAtBeginningOfTurnSchedule = parseScheduleConfig( scheduleConfig );
-        setAutoSaveAtBeginningOfTurn( true );
-    }
 }
 
 void Settings::configureAutoSaveAtEndOfTurn( const std::string& scheduleConfig )
 {
-    if (scheduleConfig == "-") {
-        setAutoSaveAtEndOfTurn( false );
-    }
-    else {
+//    if (scheduleConfig == "-") {
         _autosaveAtEndOfTurnSchedule = parseScheduleConfig( scheduleConfig );
-        setAutoSaveAtEndOfTurn( true );
-    }
 }
+
 std::vector<AutoSaveSchedule> Settings::getAutoSaveAtBeginningOfTurnSchedule() const {
     return _autosaveAtBeginningOfTurnSchedule;
 }
@@ -484,11 +474,6 @@ bool Settings::Read( const std::string & filePath )
         configureAutoSaveAtEndOfTurn();
     }
 
-    constexpr const char* AUTO_SAVE_EVERY_TURNS = "store auto save on every turn";
-    if ( config.Exists( AUTO_SAVE_EVERY_TURNS ) ) {
-        setAutoSaveOnAllTurns( config.StrParams( AUTO_SAVE_EVERY_TURNS ) == "on" );
-    }
-
     if ( config.Exists( "cursor soft rendering" ) ) {
         if ( config.StrParams( "cursor soft rendering" ) == "on" ) {
             _gameOptions.SetModes( GAME_CURSOR_SOFT_EMULATION );
@@ -665,9 +650,6 @@ std::string Settings::String() const
     //todo заменить _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" и _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" на приведение к строке значений дефолтных шаблонов
     os << std::endl << R"(# should auto save be performed at the end of the turn: "-" or "{m} {w} {d} {t} {c}")" << std::endl;
     os << AUTO_SAVE_END  << " = " << "# # #" << std::endl;
-
-    os << std::endl << "# should auto save be stored on every turn: on/off" << std::endl;
-    os << "store auto save on every turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS ) ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# enable cursor software rendering" << std::endl;
     os << "cursor soft rendering = " << ( _gameOptions.Modes( GAME_CURSOR_SOFT_EMULATION ) ? "on" : "off" ) << std::endl;
@@ -975,36 +957,6 @@ void Settings::setSystemInfo( const bool enable )
     }
 }
 
-void Settings::setAutoSaveAtBeginningOfTurn( const bool enable )
-{
-    if ( enable ) {
-        _gameOptions.SetModes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN );
-    }
-    else {
-        _gameOptions.ResetModes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN );
-    }
-}
-
-void Settings::setAutoSaveAtEndOfTurn( const bool enable )
-{
-    if ( enable ) {
-        _gameOptions.SetModes( GAME_AUTO_SAVE_AT_END_OF_TURN );
-    }
-    else {
-        _gameOptions.ResetModes( GAME_AUTO_SAVE_AT_END_OF_TURN );
-    }
-}
-
-void Settings::setAutoSaveOnAllTurns( const bool enable )
-{
-    if ( enable ) {
-        _gameOptions.SetModes( GAME_AUTO_SAVE_ON_ALL_TURNS );
-    }
-    else {
-        _gameOptions.ResetModes( GAME_AUTO_SAVE_ON_ALL_TURNS );
-    }
-}
-
 void Settings::setBattleDamageInfo( const bool enable )
 {
     if ( enable ) {
@@ -1079,16 +1031,12 @@ bool Settings::isSystemInfoEnabled() const
 
 bool Settings::isAutoSaveAtBeginningOfTurnEnabled() const
 {
-    return _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN );
+    return !_autosaveAtBeginningOfTurnSchedule.empty();
 }
 
 bool Settings::isAutoSaveAtEndOfTurnEnabled() const  
 {
-    return _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN );
-}
-bool Settings::isAutoSaveOnAllTurnsEnabled() const  
-{
-    return _gameOptions.Modes( GAME_AUTO_SAVE_ON_ALL_TURNS );
+    return !_autosaveAtEndOfTurnSchedule.empty();
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const
