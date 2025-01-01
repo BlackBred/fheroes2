@@ -125,13 +125,10 @@ bool Game::AutoSave(AutoSaveType type)
     bool result = true;
 
     for (const auto & name : names) {
-        result = result && Game::Save( System::concatPath( GetSaveDir(), name), true );
+        result = result && Game::Save( System::concatPath( GetSaveDir(true), name), true );
     }
 
     return result;
-
-    //return Game::Save( System::concatPath( GetSaveDir(), GetAutoSaveFileName( type )), true );
-
 }
 
 bool Game::Save( const std::string & filePath, const bool autoSave /* = false */ )
@@ -388,9 +385,24 @@ void Game::SetLastSaveName( const std::string & name )
     lastSaveName = name;
 }
 
-std::string Game::GetSaveDir()
+std::string Game::GetRootSaveDir()
 {
     return System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
+}
+
+std::string Game::GetSaveDir(const bool autoSave)
+{
+    std::string path = GetRootSaveDir();
+
+    if (Settings::Get().isSavesInSubdirEnabled()) {
+        path = System::concatPath(path, Settings::Get().getCurrentMapInfo().name);
+    }
+
+    if (autoSave && Settings::Get().isAutoSavesInSubdirEnabled()) {
+        path = System::concatPath( path, "auto" );
+    }
+
+    return path;
 }
 
 std::string Game::GetSaveFileBaseName()

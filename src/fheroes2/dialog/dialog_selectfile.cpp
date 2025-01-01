@@ -231,10 +231,10 @@ namespace
         // Do nothing.
     }
 
-    MapsFileInfoList getSortedMapsFileInfoList()
+    MapsFileInfoList getSortedMapsFileInfoList( const bool forSave)
     {
         ListFiles files;
-        files.ReadDir( Game::GetSaveDir(), Game::GetSaveFileExtension() );
+        files.ReadDir( forSave ? Game::GetSaveDir() : Game::GetRootSaveDir(), Game::GetSaveFileExtension() );
 
         MapsFileInfoList mapInfos;
         mapInfos.reserve( files.size() );
@@ -257,7 +257,7 @@ namespace
         // setup cursor
         const CursorRestorer cursorRestorer( true, Cursor::POINTER );
 
-        MapsFileInfoList lists = getSortedMapsFileInfoList();
+        MapsFileInfoList lists = getSortedMapsFileInfoList(isEditing);
 
         const int32_t listHeightDeduction = 112;
         const int32_t listAreaOffsetY = 3;

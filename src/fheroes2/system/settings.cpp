@@ -78,9 +78,9 @@ namespace
         GAME_BATTLE_SHOW_MOVE_SHADOW = 0x02000000,
         GAME_BATTLE_AUTO_RESOLVE = 0x04000000,
         GAME_BATTLE_AUTO_SPELLCAST = 0x08000000,
-
         GAME_SCREEN_SCALING_TYPE_NEAREST = 0x20000000,
-
+        GAME_SAVES_IN_SUBDIR = 0x40000000,
+        GAME_AUTO_SAVES_IN_SUBDIR = 0x80000000
     };
 
     enum EditorOptions : uint32_t
@@ -100,6 +100,9 @@ std::string Settings::GetVersion()
 
 constexpr const char* AUTO_SAVE_BEGINNING = "auto save at the beginning of the turn";
 constexpr const char* AUTO_SAVE_END = "auto save at the end of the turn";
+
+constexpr const char* AUTO_SAVES_SUBDIR = "store auto saves in the separated subdirectory";
+constexpr const char* SAVES_SUBDIR = "store saves in the separated subdirectory";
 
 Settings::Settings()
     : _resolutionInfo( fheroes2::Display::DEFAULT_WIDTH, fheroes2::Display::DEFAULT_HEIGHT )
@@ -342,7 +345,7 @@ bool Settings::Read( const std::string & filePath )
     if ( config.Exists( "ai speed" ) ) {
         SetAIMoveSpeed( config.IntParams( "ai speed" ) );
     }
-    
+
     if ( config.Exists( "heroes speed" ) ) {
         SetHeroesMoveSpeed( config.IntParams( "heroes speed" ) );
     }
@@ -472,6 +475,14 @@ bool Settings::Read( const std::string & filePath )
     }
     else {
         configureAutoSaveAtEndOfTurn();
+    }
+
+    if ( config.Exists( AUTO_SAVES_SUBDIR ) ) {
+        setAutoSavesInSubdir( config.StrParams( AUTO_SAVES_SUBDIR ) == "on" );
+    }
+
+    if ( config.Exists( SAVES_SUBDIR ) ) {
+        setSavesInSubdir( config.StrParams( SAVES_SUBDIR ) == "on" );
     }
 
     if ( config.Exists( "cursor soft rendering" ) ) {
@@ -650,6 +661,12 @@ std::string Settings::String() const
     //todo заменить _gameOptions.Modes( GAME_AUTO_SAVE_AT_END_OF_TURN ) ? "on" : "off" и _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" на приведение к строке значений дефолтных шаблонов
     os << std::endl << R"(# should auto save be performed at the end of the turn: "-" or "{m} {w} {d} {t} {c}")" << std::endl;
     os << AUTO_SAVE_END  << " = " << "# # #" << std::endl;
+
+    os << std::endl << "# should auto save be stored in separated sub directory 'auto': on/off" << std::endl;
+    os << AUTO_SAVES_SUBDIR << " = " << ( isAutoSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
+
+    os << std::endl << "# should save be stored in separated sub directory by every scenario : on/off" << std::endl;
+    os << AUTO_SAVES_SUBDIR << " = " << ( isSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# enable cursor software rendering" << std::endl;
     os << "cursor soft rendering = " << ( _gameOptions.Modes( GAME_CURSOR_SOFT_EMULATION ) ? "on" : "off" ) << std::endl;
@@ -957,6 +974,40 @@ void Settings::setSystemInfo( const bool enable )
     }
 }
 
+void Settings::setAutoSavesInSubdir( const bool enable )
+{
+    if ( enable ) {
+#if defined( TARGET_PS_VITA )
+        ERROR_LOG( "The option "<< GAME_AUTO_SAVES_IN_SUBDIR << " is not supported for TARGET_PS_VITA.")
+        _gameOptions.ResetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+        return;
+        }
+#else
+        _gameOptions.SetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+    }
+    else {
+        _gameOptions.ResetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+    }
+#endif
+}
+
+void Settings::setSavesInSubdir( const bool enable )
+{
+    if ( enable ) {
+#if defined( TARGET_PS_VITA )
+        ERROR_LOG( "The option "<< GAME_SAVES_IN_SUBDIR << " is not supported for TARGET_PS_VITA.")
+        _gameOptions.ResetModes( GAME_SAVES_IN_SUBDIR );
+        return;
+        }
+#else
+        _gameOptions.SetModes( GAME_SAVES_IN_SUBDIR );
+    }
+    else {
+        _gameOptions.ResetModes( GAME_SAVES_IN_SUBDIR );
+    }
+#endif
+}
+
 void Settings::setBattleDamageInfo( const bool enable )
 {
     if ( enable ) {
@@ -1034,9 +1085,19 @@ bool Settings::isAutoSaveAtBeginningOfTurnEnabled() const
     return !_autosaveAtBeginningOfTurnSchedule.empty();
 }
 
-bool Settings::isAutoSaveAtEndOfTurnEnabled() const  
+bool Settings::isAutoSaveAtEndOfTurnEnabled() const
 {
     return !_autosaveAtEndOfTurnSchedule.empty();
+}
+
+bool Settings::isAutoSavesInSubdirEnabled() const
+{
+    return _gameOptions.Modes( GAME_AUTO_SAVES_IN_SUBDIR );
+}
+
+bool Settings::isSavesInSubdirEnabled() const
+{
+    return _gameOptions.Modes( GAME_SAVES_IN_SUBDIR );
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const

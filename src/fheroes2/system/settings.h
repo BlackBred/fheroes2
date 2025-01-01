@@ -226,6 +226,8 @@ public:
     bool isAutoSaveAtBeginningOfTurnEnabled() const;
     bool isAutoSaveAtEndOfTurnEnabled() const;
 
+    bool isAutoSavesInSubdirEnabled() const;
+    bool isSavesInSubdirEnabled() const;
     bool isBattleShowDamageInfoEnabled() const;
     bool isHideInterfaceEnabled() const;
     bool isEvilInterfaceEnabled() const;
@@ -288,6 +290,10 @@ public:
     void set3DAudio( const bool enable );
     void setVSync( const bool enable );
     void setSystemInfo( const bool enable );
+
+    void setAutoSavesInSubdir( const bool enable );
+    void setSavesInSubdir( const bool enable );
+
     void setBattleDamageInfo( const bool enable );
     void setHideInterface( const bool enable );
     void setEvilInterface( const bool enable );

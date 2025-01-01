@@ -257,7 +257,7 @@ fheroes2::GameMode Game::DisplayHighScores( const bool isCampaign )
     }
 #endif
 
-    const std::string highScoreDataPath = System::concatPath( GetSaveDir(), highScoreFileName );
+    const std::string highScoreDataPath = System::concatPath( GetRootSaveDir(), highScoreFileName );
 
     if ( !highScoreDataContainer.load( highScoreDataPath ) ) {
         // Unable to load the file. Let's populate with the default values.
