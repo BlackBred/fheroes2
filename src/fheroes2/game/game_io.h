@@ -42,7 +42,9 @@ namespace Game
     uint16_t GetVersionOfCurrentSaveFile();
     void SetVersionOfCurrentSaveFile( const uint16_t version );
 
+    std::string GetRootSaveDir();
     std::string GetSaveDir( const bool autoSave = false );
+
     std::string GetSaveFileBaseName();
     std::string GetSaveFileExtension();
     std::string GetSaveFileExtension( const int gameType );

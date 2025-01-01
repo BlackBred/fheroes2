@@ -189,6 +189,7 @@ public:
     bool isSystemInfoEnabled() const;
     bool isAutoSaveAtBeginningOfTurnEnabled() const;
     bool isAutoSavesInSubdirEnabled() const;
+    bool isSavesInSubdirEnabled() const;
     bool isBattleShowDamageInfoEnabled() const;
     bool isHideInterfaceEnabled() const;
     bool isEvilInterfaceEnabled() const;

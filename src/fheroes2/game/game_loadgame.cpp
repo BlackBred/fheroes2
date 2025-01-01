@@ -111,7 +111,7 @@ fheroes2::GameMode Game::LoadMulti()
         buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
 
         if ( le.MouseClickLeft( buttonHotSeat.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_HOTSEAT ) ) {
-            if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_HOTSEAT ) ) ) {
+            if ( ListFiles::IsEmpty( GetRootSaveDir(), GetSaveFileExtension( Game::TYPE_HOTSEAT ) ) ) {
                 fheroes2::showStandardTextMessage( _( "Load Game" ), _( "No save files to load." ), Dialog::OK );
             }
             else {
@@ -184,7 +184,7 @@ fheroes2::GameMode Game::LoadGame()
         }
 
         if ( le.MouseClickLeft( buttonStandardGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) ) {
-            if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_STANDARD ) ) ) {
+            if ( ListFiles::IsEmpty( GetRootSaveDir(), GetSaveFileExtension( Game::TYPE_STANDARD ) ) ) {
                 fheroes2::showStandardTextMessage( _( "Load Game" ), _( "No save files to load." ), Dialog::OK );
             }
             else {
@@ -192,7 +192,7 @@ fheroes2::GameMode Game::LoadGame()
             }
         }
         else if ( buttonCampaignGame.isEnabled() && ( le.MouseClickLeft( buttonCampaignGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_CAMPAIGN ) ) ) {
-            if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_CAMPAIGN ) ) ) {
+            if ( ListFiles::IsEmpty( GetRootSaveDir(), GetSaveFileExtension( Game::TYPE_CAMPAIGN ) ) ) {
                 fheroes2::showStandardTextMessage( _( "Load Game" ), _( "No save files to load." ), Dialog::OK );
             }
             else {

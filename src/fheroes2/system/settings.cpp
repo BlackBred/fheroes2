@@ -893,10 +893,15 @@ bool Settings::isAutoSaveAtBeginningOfTurnEnabled() const
     return _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN );
 }
 
-
 bool Settings::isAutoSavesInSubdirEnabled() const
 {
     return _gameOptions.Modes( GAME_AUTO_SAVES_IN_SUBDIR );
+}
+
+bool Settings::isSavesInSubdirEnabled() const
+{
+    //todo заменить заглушку
+    return true;
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const
