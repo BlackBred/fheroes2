@@ -125,7 +125,7 @@ bool Game::AutoSave(AutoSaveType type)
     bool result = true;
 
     for (const auto & name : names) {
-        result = result && Game::Save( System::concatPath( GetSaveDir(true), name), true );
+        result = result && Game::Save( System::concatPath( GetSaveDir(), name), true );
     }
 
     return result;
@@ -388,7 +388,7 @@ void Game::SetLastSaveName( const std::string & name )
     lastSaveName = name;
 }
 
-std::string Game::GetSaveDir(const bool autoSave)
+std::string Game::GetSaveDir()
 {
     return System::concatPath( System::concatPath( System::GetDataDirectory( "fheroes2" ), "files" ), "save" );
 }
