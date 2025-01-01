@@ -809,11 +809,18 @@ void Settings::setAutoSaveAtBeginningOfTurn( const bool enable )
 void Settings::setAutoSavesInSubdir( const bool enable )
 {
     if ( enable ) {
+#if defined( TARGET_PS_VITA )
+        ERROR_LOG( "The option "<< GAME_AUTO_SAVES_IN_SUBDIR << " is not supported for TARGET_PS_VITA.")
+        _gameOptions.ResetModes( GAME_AUTO_SAVES_IN_SUBDIR );
+        return;
+        }
+#else
         _gameOptions.SetModes( GAME_AUTO_SAVES_IN_SUBDIR );
     }
     else {
         _gameOptions.ResetModes( GAME_AUTO_SAVES_IN_SUBDIR );
     }
+#endif
 }
 
 void Settings::setBattleDamageInfo( const bool enable )
