@@ -80,6 +80,7 @@ namespace
         GAME_BATTLE_AUTO_SPELLCAST = 0x08000000,
         GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN = 0x10000000,
         GAME_SCREEN_SCALING_TYPE_NEAREST = 0x20000000,
+        GAME_SAVES_IN_SUBDIR = 0x40000000,
         GAME_AUTO_SAVES_IN_SUBDIR = 0x80000000
     };
 
@@ -99,6 +100,7 @@ std::string Settings::GetVersion()
 }
 
 constexpr const char* AUTO_SAVES_SUBDIR = "store auto saves in the separated subdirectory";
+constexpr const char* SAVES_SUBDIR = "store saves in the separated subdirectory";
 
 Settings::Settings()
     : _resolutionInfo( fheroes2::Display::DEFAULT_WIDTH, fheroes2::Display::DEFAULT_HEIGHT )
@@ -323,6 +325,10 @@ bool Settings::Read( const std::string & filePath )
         setAutoSavesInSubdir( config.StrParams( AUTO_SAVES_SUBDIR ) == "on" );
     }
 
+    if ( config.Exists( SAVES_SUBDIR ) ) {
+        setSavesInSubdir( config.StrParams( SAVES_SUBDIR ) == "on" );
+    }
+
     if ( config.Exists( "cursor soft rendering" ) ) {
         if ( config.StrParams( "cursor soft rendering" ) == "on" ) {
             _gameOptions.SetModes( GAME_CURSOR_SOFT_EMULATION );
@@ -488,7 +494,10 @@ std::string Settings::String() const
     os << "auto save at the beginning of the turn = " << ( _gameOptions.Modes( GAME_AUTO_SAVE_AT_BEGINNING_OF_TURN ) ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# should auto save be stored in separated sub directory 'auto': on/off" << std::endl;
-    os << AUTO_SAVES_SUBDIR << " = " << ( _gameOptions.Modes( GAME_AUTO_SAVES_IN_SUBDIR ) ? "on" : "off" ) << std::endl;
+    os << AUTO_SAVES_SUBDIR << " = " << ( isAutoSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
+
+    os << std::endl << "# should save be stored in separated sub directory by every scenario : on/off" << std::endl;
+    os << AUTO_SAVES_SUBDIR << " = " << ( isSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# enable cursor software rendering" << std::endl;
     os << "cursor soft rendering = " << ( _gameOptions.Modes( GAME_CURSOR_SOFT_EMULATION ) ? "on" : "off" ) << std::endl;
@@ -823,6 +832,23 @@ void Settings::setAutoSavesInSubdir( const bool enable )
 #endif
 }
 
+void Settings::setSavesInSubdir( const bool enable )
+{
+    if ( enable ) {
+#if defined( TARGET_PS_VITA )
+        ERROR_LOG( "The option "<< GAME_SAVES_IN_SUBDIR << " is not supported for TARGET_PS_VITA.")
+        _gameOptions.ResetModes( GAME_SAVES_IN_SUBDIR );
+        return;
+        }
+#else
+        _gameOptions.SetModes( GAME_SAVES_IN_SUBDIR );
+    }
+    else {
+        _gameOptions.ResetModes( GAME_SAVES_IN_SUBDIR );
+    }
+#endif
+}
+
 void Settings::setBattleDamageInfo( const bool enable )
 {
     if ( enable ) {
@@ -907,8 +933,7 @@ bool Settings::isAutoSavesInSubdirEnabled() const
 
 bool Settings::isSavesInSubdirEnabled() const
 {
-    //todo заменить заглушку
-    return true;
+    return _gameOptions.Modes( GAME_SAVES_IN_SUBDIR );
 }
 
 bool Settings::isBattleShowDamageInfoEnabled() const

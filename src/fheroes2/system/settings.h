@@ -253,7 +253,8 @@ public:
     void setVSync( const bool enable );
     void setSystemInfo( const bool enable );
     void setAutoSaveAtBeginningOfTurn( const bool enable );
-    void setAutoSavesInSubdir( bool enable );
+    void setAutoSavesInSubdir( const bool enable );
+    void setSavesInSubdir( const bool enable );
     void setBattleDamageInfo( const bool enable );
     void setHideInterface( const bool enable );
     void setEvilInterface( const bool enable );
