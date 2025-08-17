@@ -672,7 +672,7 @@ std::string Settings::String() const
     os << AUTO_SAVES_SUBDIR << " = " << ( isAutoSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# should save be stored in separated sub directory by every scenario : on/off" << std::endl;
-    os << AUTO_SAVES_SUBDIR << " = " << ( isSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
+    os << SAVES_SUBDIR << " = " << ( isSavesInSubdirEnabled() ? "on" : "off" ) << std::endl;
 
     os << std::endl << "# enable cursor software rendering" << std::endl;
     os << "cursor soft rendering = " << ( _gameOptions.Modes( GAME_CURSOR_SOFT_EMULATION ) ? "on" : "off" ) << std::endl;
