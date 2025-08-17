@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2024                                             *
+ *   Copyright (C) 2019 - 2025                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2009 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 
+#include "color.h"
 #include "monster.h"
 #include "players.h"
 
@@ -136,7 +137,7 @@ private:
     Troop * getBestMatchToCondition( const std::function<bool( const Troop *, const Troop * )> & condition ) const;
 };
 
-struct NeutralMonsterJoiningCondition
+struct NeutralMonsterJoiningCondition final
 {
     enum class Reason : int
     {
@@ -148,12 +149,12 @@ struct NeutralMonsterJoiningCondition
         Bane
     };
 
-    Reason reason;
-    uint32_t monsterCount;
+    Reason reason{ Reason::None };
+    uint32_t monsterCount{ 0 };
 
     // These messages are used only for Alliance and Bane reasons.
-    const char * joiningMessage;
-    const char * fleeingMessage;
+    const char * joiningMessage{ nullptr };
+    const char * fleeingMessage{ nullptr };
 };
 
 class Army final : public Troops, public Control
@@ -172,7 +173,7 @@ public:
 
     static void SwapTroops( Troop &, Troop & );
 
-    static NeutralMonsterJoiningCondition GetJoinSolution( const Heroes &, const Maps::Tile &, const Troop & );
+    static NeutralMonsterJoiningCondition GetJoinSolution( const Heroes & hero, const Maps::Tile & tile, const Troop & troop );
 
     static void drawSingleDetailedMonsterLine( const Troops & troops, int32_t cx, int32_t cy, int32_t width );
     static void drawMultipleMonsterLines( const Troops & troops, int32_t posX, int32_t posY, int32_t lineWidth, bool isCompact, const bool isDetailedView,
@@ -187,7 +188,10 @@ public:
 
     Army & operator=( const Army & ) = delete;
 
-    const Troops & getTroops() const;
+    const Troops & getTroops() const
+    {
+        return *this;
+    }
 
     // Resets the army. If the army doesn't have a commanding hero, then it makes the army empty. Otherwise, if 'defaultArmy' is set to true, then it creates a default
     // army of the commanding hero's faction (several units of level 1 and 2). Otherwise, a minimum army is created, consisting of exactly one monster of the first level
@@ -195,7 +199,7 @@ public:
     void Reset( const bool defaultArmy = false );
     void setFromTile( const Maps::Tile & tile );
 
-    int GetColor() const;
+    PlayerColor GetColor() const;
     int GetControl() const override;
     uint32_t getTotalCount() const;
 
@@ -203,9 +207,9 @@ public:
     bool isStrongerThan( const Army & target, const double safetyRatio = 1.0 ) const;
     bool isMeleeDominantArmy() const;
 
-    void SetColor( int cl )
+    void SetColor( const PlayerColor color )
     {
-        color = cl;
+        _color = color;
     }
 
     int GetMorale() const;
@@ -269,6 +273,6 @@ private:
     void ArrangeForBattle( const Monster & monster, const uint32_t monstersCount, const int32_t tileIndex, const bool allowUpgrade );
 
     HeroBase * commander;
-    bool _isSpreadCombatFormation;
-    int color;
+    bool _isSpreadCombatFormation{ true };
+    PlayerColor _color{ PlayerColor::NONE };
 };

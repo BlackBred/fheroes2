@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2021 - 2024                                             *
+ *   Copyright (C) 2021 - 2025                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef H2MONSTER_INFO_H
-#define H2MONSTER_INFO_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -61,7 +60,7 @@ namespace fheroes2
         SPELL_CASTER,
         HP_REGENERATION,
         TWO_CELL_MELEE_ATTACK,
-        ALWAYS_RETALIATE,
+        UNLIMITED_RETALIATION,
         ALL_ADJACENT_CELL_MELEE_ATTACK,
         NO_MELEE_PENALTY,
         NO_ENEMY_RETALIATION,
@@ -179,8 +178,8 @@ namespace fheroes2
 
     struct MonsterGeneralStats
     {
-        const char * name;
-        const char * pluralName;
+        const char * untranslatedName;
+        const char * untranslatedPluralName;
 
         uint32_t baseGrowth;
         uint32_t race;
@@ -239,4 +238,3 @@ namespace fheroes2
     bool isAbilityPresent( const std::vector<MonsterAbility> & abilities, const MonsterAbilityType abilityType );
     bool isWeaknessPresent( const std::vector<MonsterWeakness> & weaknesses, const MonsterWeaknessType weaknessType );
 }
-#endif

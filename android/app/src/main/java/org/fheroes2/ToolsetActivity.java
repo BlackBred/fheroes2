@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2023 - 2024                                             *
+ *   Copyright (C) 2023 - 2025                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,6 +38,9 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -144,6 +147,14 @@ public final class ToolsetActivity extends AppCompatActivity
 
         setContentView( R.layout.activity_toolset );
 
+        ViewCompat.setOnApplyWindowInsetsListener( findViewById( R.id.activity_toolset_root_sv ), ( v, insets ) -> {
+            final Insets paddingInsets = insets.getInsets( WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() );
+
+            v.setPadding( paddingInsets.left, paddingInsets.top, paddingInsets.right, paddingInsets.bottom );
+
+            return WindowInsetsCompat.CONSUMED;
+        } );
+
         viewModel = new ViewModelProvider( this ).get( ToolsetActivityViewModel.class );
         viewModel.liveStatus.observe( this, this::updateUI );
     }
@@ -168,7 +179,19 @@ public final class ToolsetActivity extends AppCompatActivity
     @SuppressWarnings( "java:S1172" ) // SonarQube warning "Remove unused method parameter"
     public void extractHoMM2AssetsButtonClicked( final View view )
     {
-        zipFileChooserLauncher.launch( "application/zip" );
+        try {
+            zipFileChooserLauncher.launch( "application/zip" );
+        }
+        catch ( final Exception ex ) {
+            Log.e( "fheroes2", "Failed to extract HoMM2 assets.", ex );
+
+            ( new AlertDialog.Builder( this ) )
+                .setTitle( R.string.activity_toolset_extract_homm2_assets_error_title )
+                .setMessage( R.string.activity_toolset_extract_homm2_assets_error_message )
+                .setPositiveButton( R.string.activity_toolset_extract_homm2_assets_error_positive_btn_text, ( dialog, which ) -> {} )
+                .create()
+                .show();
+        }
     }
 
     @SuppressWarnings( "java:S1172" ) // SonarQube warning "Remove unused method parameter"

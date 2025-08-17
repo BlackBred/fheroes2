@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2024                                             *
+ *   Copyright (C) 2019 - 2025                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2012 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -21,8 +21,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef H2ARMYBAR_H
-#define H2ARMYBAR_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -82,12 +81,10 @@ private:
 
     Army * _army{ nullptr };
     fheroes2::Image backsf;
-    bool use_mini_sprite;
-    bool read_only;
+    bool use_mini_sprite{ false };
+    bool read_only{ false };
     bool can_change{ false };
     bool _saveLastTroop{ true };
     std::string msg;
     int32_t _troopWindowOffsetY{ 0 };
 };
-
-#endif

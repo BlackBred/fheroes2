@@ -1,6 +1,6 @@
 ###########################################################################
 #   fheroes2: https://github.com/ihhub/fheroes2                           #
-#   Copyright (C) 2024                                                    #
+#   Copyright (C) 2024 - 2025                                             #
 #                                                                         #
 #   This program is free software; you can redistribute it and/or modify  #
 #   it under the terms of the GNU General Public License as published by  #
@@ -42,6 +42,10 @@ be.mo bg.mo ru.mo uk.mo: %.mo: %.po
 # German, Danish, French, Italian, Dutch, Norwegian, Portuguese, Spanish and Swedish translations use CP1252
 de.mo dk.mo es.mo fr.mo it.mo nb.mo pt.mo sv.mo nl.mo: %.mo: %.po
 	$(call MSGFMT,CP1252)
+	
+# Greek uses CP1253
+gr.mo: gr.po
+	$(call MSGFMT,CP1253)
 
 # Turkish uses CP1254
 tr.mo: tr.po
@@ -65,4 +69,4 @@ ro.mo: ro.po
 	sed -e 'y/äëïöőüűÄËÏŐÖÜŰ/aeioouuAEIOOUU/' $< | $(ICONV) -f utf-8 -t ascii//TRANSLIT | msgfmt - -o $@
 
 clean:
-	rm -f *.mo *.po~
+	-rm -f *.mo *.po~

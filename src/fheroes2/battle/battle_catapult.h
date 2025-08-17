@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2024                                             *
+ *   Copyright (C) 2019 - 2025                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2010 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -21,8 +21,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef H2BATTLE_CATAPULT_H
-#define H2BATTLE_CATAPULT_H
+#pragma once
 
 #include <cstdint>
 #include <map>
@@ -35,7 +34,7 @@ class HeroBase;
 
 namespace Rand
 {
-    class DeterministicRandomGenerator;
+    class PCG32;
 }
 
 namespace Battle
@@ -49,8 +48,7 @@ namespace Battle
         Catapult & operator=( const Catapult & ) = delete;
 
         static const std::vector<CastleDefenseStructure> & getAllowedTargets();
-        static CastleDefenseStructure GetTarget( const std::map<CastleDefenseStructure, int> & stateOfCatapultTargets,
-                                                 Rand::DeterministicRandomGenerator & randomGenerator );
+        static CastleDefenseStructure GetTarget( const std::map<CastleDefenseStructure, int> & stateOfCatapultTargets, Rand::PCG32 & randomGenerator );
         static fheroes2::Point GetTargetPosition( const CastleDefenseStructure target, const bool hit );
 
         uint32_t GetShots() const
@@ -58,14 +56,12 @@ namespace Battle
             return catShots;
         }
 
-        int GetDamage( Rand::DeterministicRandomGenerator & randomGenerator ) const;
-        bool IsNextShotHit( Rand::DeterministicRandomGenerator & randomGenerator ) const;
+        int GetDamage( Rand::PCG32 & randomGenerator ) const;
+        bool IsNextShotHit( Rand::PCG32 & randomGenerator ) const;
 
     private:
-        uint32_t catShots;
-        uint32_t doubleDamageChance;
-        bool canMiss;
+        uint32_t catShots{ 0 };
+        uint32_t doubleDamageChance{ 0 };
+        bool canMiss{ false };
     };
 }
-
-#endif

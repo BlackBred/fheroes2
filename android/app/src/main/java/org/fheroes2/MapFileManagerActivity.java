@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2024                                                    *
+ *   Copyright (C) 2024 - 2025                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,6 +46,9 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -292,6 +295,14 @@ public final class MapFileManagerActivity extends AppCompatActivity
 
         setContentView( R.layout.activity_map_file_manager );
 
+        ViewCompat.setOnApplyWindowInsetsListener( findViewById( R.id.activity_map_file_manager_root_rl ), ( v, insets ) -> {
+            final Insets paddingInsets = insets.getInsets( WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() );
+
+            v.setPadding( paddingInsets.left, paddingInsets.top, paddingInsets.right, paddingInsets.bottom );
+
+            return WindowInsetsCompat.CONSUMED;
+        } );
+
         mapFileDir = new File( getExternalFilesDir( null ), "maps" );
 
         mapFileListView = findViewById( R.id.activity_map_file_manager_map_file_list );
@@ -332,7 +343,19 @@ public final class MapFileManagerActivity extends AppCompatActivity
     @SuppressWarnings( "java:S1172" ) // SonarQube warning "Remove unused method parameter"
     public void importButtonClicked( final View view )
     {
-        zipFileChooserLauncher.launch( "application/zip" );
+        try {
+            zipFileChooserLauncher.launch( "application/zip" );
+        }
+        catch ( final Exception ex ) {
+            Log.e( "fheroes2", "Failed to import map files.", ex );
+
+            ( new AlertDialog.Builder( this ) )
+                .setTitle( R.string.activity_map_file_manager_import_error_title )
+                .setMessage( R.string.activity_map_file_manager_import_error_message )
+                .setPositiveButton( R.string.activity_map_file_manager_import_error_positive_btn_text, ( dialog, which ) -> {} )
+                .create()
+                .show();
+        }
     }
 
     @SuppressWarnings( "java:S1172" ) // SonarQube warning "Remove unused method parameter"
@@ -349,7 +372,19 @@ public final class MapFileManagerActivity extends AppCompatActivity
             return;
         }
 
-        zipFileLocationChooserLauncher.launch( getString( R.string.activity_map_file_manager_suggested_zip_file_name ) );
+        try {
+            zipFileLocationChooserLauncher.launch( getString( R.string.activity_map_file_manager_suggested_zip_file_name ) );
+        }
+        catch ( final Exception ex ) {
+            Log.e( "fheroes2", "Failed to export map files.", ex );
+
+            ( new AlertDialog.Builder( this ) )
+                .setTitle( R.string.activity_map_file_manager_export_error_title )
+                .setMessage( R.string.activity_map_file_manager_export_error_message )
+                .setPositiveButton( R.string.activity_map_file_manager_export_error_positive_btn_text, ( dialog, which ) -> {} )
+                .create()
+                .show();
+        }
     }
 
     @SuppressWarnings( "java:S1172" ) // SonarQube warning "Remove unused method parameter"

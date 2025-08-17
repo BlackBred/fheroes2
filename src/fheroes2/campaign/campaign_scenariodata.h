@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2021 - 2024                                             *
+ *   Copyright (C) 2021 - 2025                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef H2CAMPAIGN_SCENARIODATA_H
-#define H2CAMPAIGN_SCENARIODATA_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -105,10 +104,10 @@ namespace Campaign
             STARTING_RACE_AND_ARMY
         };
 
-        int32_t _type;
-        int32_t _subType;
-        int32_t _amount;
-        int32_t _artifactSpellId; // Spell ID of a spell scroll
+        int32_t _type{ 0 };
+        int32_t _subType{ 0 };
+        int32_t _amount{ 0 };
+        int32_t _artifactSpellId{ 0 }; // Spell ID of a spell scroll
 
         ScenarioBonusData();
         ScenarioBonusData( const int32_t type, const int32_t subType, const int32_t amount );
@@ -207,5 +206,3 @@ namespace Campaign
 
     const char * getCampaignName( const int campaignId );
 }
-
-#endif
