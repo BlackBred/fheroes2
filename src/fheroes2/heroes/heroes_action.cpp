@@ -91,6 +91,11 @@
 #include "visit.h"
 #include "world.h"
 
+bool isBattle(const MP2::MapObjectType objectType)
+{
+    return objectType == MP2::OBJ_MONSTER || objectType == MP2::OBJ_CASTLE || objectType == MP2::OBJ_HERO || objectType == MP2::OBJ_BOAT || objectType == MP2::OBJ_COAST;
+}
+
 namespace
 {
     class MusicalEffectPlayer
@@ -3961,11 +3966,6 @@ void Heroes::Action( int tileIndex )
     if (isBattle(objectType)) {
         Game::AutoSave( Game::AutoSaveType::EndedBattle);
     }
-
-}
-static bool isBattle(const MP2::MapObjectType objectType)
-{
-    return objectType == MP2::OBJ_MONSTER || objectType == MP2::OBJ_CASTLE || objectType == MP2::OBJ_HERO || objectType == MP2::OBJ_BOAT || objectType == MP2::OBJ_COAST;
 
 }
 

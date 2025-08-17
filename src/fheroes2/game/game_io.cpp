@@ -436,9 +436,8 @@ std::string Game::GetSaveFileBaseName()
 std::vector<std::string> Game::GetAutoSaveFileName(AutoSaveType type)
 {
     std::string fileName;
-    std::vector<AutoSaveSchedule> schedules; ;
-    std::vector<std::string> names; ;
-   ;
+    std::vector<AutoSaveSchedule> schedules;
+    std::vector<std::string> names;
     switch (type) {
     case AutoSaveType::BeginningTurn:
         fileName = autoSaveBeginningName;
